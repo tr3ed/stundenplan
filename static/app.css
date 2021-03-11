@@ -1,0 +1,18 @@
+table { 
+    border-collapse: separate; 
+    border-spacing: 10px; 
+    margin-top: -10px; /* correct offset on first border spacing if desired */
+}
+
+th {
+    text-align: center;
+    font-size: large;
+}
+
+td {
+    border: solid 1px #000;
+    border-radius: 10px;
+    width: 250px;
+    height: 75px;
+    padding-left: 20px;
+}
