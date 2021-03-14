@@ -13,15 +13,21 @@ CREATE TABLE users (
 CREATE TABLE courses (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    teacher_id UUID NOT NULL,
-    "hour" INT NOT NULL,
-    weekday INT NOT NULL
+    teacher_id UUID NOT NULL
 );
 CREATE TABLE courses_relations (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     user_id UUID NOT NULL,
     course_id UUID NOT NULL
 );
+CREATE TABLE course_hours (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    "hour" INT NOT NULL,
+    "day" INT NOT NULL,
+    course_id UUID NOT NULL,
+    room TEXT NOT NULL
+);
+ALTER TABLE course_hours ADD CONSTRAINT course_hours_ref_course_id FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE NO ACTION;
 ALTER TABLE courses ADD CONSTRAINT courses_ref_teacher_id FOREIGN KEY (teacher_id) REFERENCES users (id) ON DELETE NO ACTION;
 ALTER TABLE courses_relations ADD CONSTRAINT courses_relations_ref_course_id FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE NO ACTION;
 ALTER TABLE courses_relations ADD CONSTRAINT courses_relations_ref_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION;

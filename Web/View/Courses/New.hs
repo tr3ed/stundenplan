@@ -1,7 +1,10 @@
 module Web.View.Courses.New where
 import Web.View.Prelude
 
-data NewView = NewView { course :: Course }
+data NewView = NewView
+    { course :: Course
+    , teachers :: [User]
+    }
 
 instance View NewView where
     html NewView { .. } = [hsx|
@@ -14,12 +17,11 @@ instance View NewView where
         <h1>New Course</h1>
         {renderForm course}
     |]
+        where
+            renderForm :: Course -> Html
+            renderForm course = formFor course [hsx|
+                {(textField #name)}
+                {(selectField #teacherId teachers)}
+                {submitButton}
+            |]
 
-renderForm :: Course -> Html
-renderForm course = formFor course [hsx|
-    {(textField #name)}
-    {(textField #teacherId)}
-    {(textField #hour)}
-    {(textField #weekday)}
-    {submitButton}
-|]

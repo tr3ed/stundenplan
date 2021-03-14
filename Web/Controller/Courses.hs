@@ -9,10 +9,14 @@ import Web.View.Courses.Show
 instance Controller CoursesController where
     action CoursesAction = do
         courses <- query @Course |> fetch
+        teachers <- query @User |> fetch
         render IndexView { .. }
 
     action NewCourseAction = do
         let course = newRecord
+        teachers <- query @User
+            |> filterWhere (#userRole, Teacher)
+            |> fetch
         render NewView { .. }
 
     action ShowCourseAction { courseId } = do
@@ -21,6 +25,23 @@ instance Controller CoursesController where
 
     action EditCourseAction { courseId } = do
         course <- fetch courseId
+        hours <- query @CourseHour
+            |> filterWhere (#courseId, get #id course)
+            |> fetch
+        teachers <- query @User
+            |> filterWhere (#userRole, Teacher)
+            |> fetch
+        coursesRelations <- query @CoursesRelation
+            |> filterWhere (#courseId, get #id course)
+            |> fetch
+        let studentIds = map (get #userId) coursesRelations
+        students <- query @User
+            |> filterWhereIn (#id, studentIds)
+            |> fetch
+        otherStudents <- query @User 
+            |> filterWhere (#userRole, Student)
+            |> filterWhereNotIn (#id, studentIds)
+            |> fetch
         render EditView { .. }
 
     action UpdateCourseAction { courseId } = do
@@ -28,28 +49,49 @@ instance Controller CoursesController where
         course
             |> buildCourse
             |> ifValid \case
-                Left course -> render EditView { .. }
+                Left course -> do
+                    hours <- query @CourseHour
+                        |> filterWhere (#courseId, get #id course)
+                        |> fetch
+                    teachers <- query @User
+                        |> filterWhere (#userRole, Teacher)
+                        |> fetch
+                    coursesRelations <- query @CoursesRelation
+                        |> filterWhere (#courseId, get #id course)
+                        |> fetch
+                    let studentIds = map (get #userId) coursesRelations
+                    students <- query @User
+                        |> filterWhereIn (#id, studentIds)
+                        |> fetch
+                    otherStudents <- query @User 
+                        |> filterWhereNotIn (#id, studentIds)
+                        |> fetch
+                    render EditView { .. }
                 Right course -> do
                     course <- course |> updateRecord
-                    setSuccessMessage "Course updated"
-                    redirectTo EditCourseAction { .. }
+                    setSuccessMessage "Kurs gespeichert"
+                    redirectTo CoursesAction
 
     action CreateCourseAction = do
         let course = newRecord @Course
         course
             |> buildCourse
             |> ifValid \case
-                Left course -> render NewView { .. } 
+                Left course -> do
+                    teachers <- query @User
+                        |> filterWhere (#userRole, Teacher)
+                        |> fetch
+                    render NewView { .. } 
                 Right course -> do
                     course <- course |> createRecord
-                    setSuccessMessage "Course created"
+                    setSuccessMessage "Kurs erstellt"
                     redirectTo CoursesAction
 
     action DeleteCourseAction { courseId } = do
         course <- fetch courseId
         deleteRecord course
-        setSuccessMessage "Course deleted"
+        setSuccessMessage "Kurs gelöscht"
         redirectTo CoursesAction
 
 buildCourse course = course
-    |> fill @["name","teacherId","hour","weekday"]
+    |> fill @["name","teacherId"]

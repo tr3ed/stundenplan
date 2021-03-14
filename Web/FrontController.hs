@@ -7,6 +7,8 @@ import IHP.LoginSupport.Middleware
 import Web.Controller.Sessions
 
 -- Controller Imports
+import Web.Controller.CoursesRelations
+import Web.Controller.CourseHours
 import Web.Controller.Courses
 import Web.Controller.Users
 import Web.Controller.Static
@@ -16,6 +18,8 @@ instance FrontController WebApplication where
         [ startPage HomeAction
         , parseRoute @SessionsController
         -- Generator Marker
+        , parseRoute @CoursesRelationsController
+        , parseRoute @CourseHoursController
         , parseRoute @CoursesController
         , parseRoute @UsersController
         ]

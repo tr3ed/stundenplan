@@ -13,5 +13,9 @@ instance Controller StaticController where
         courses <- query @Course
             |> filterWhereIn (#id, courseIds)
             |> fetch
+        let courseIds = map (get #id) courses
         teachers <- query @User |> fetch
+        courseHours <- query @CourseHour 
+            |> filterWhereIn (#courseId, courseIds)
+            |> fetch
         render HomeView { .. }

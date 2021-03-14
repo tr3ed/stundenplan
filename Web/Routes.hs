@@ -12,3 +12,9 @@ instance AutoRoute UsersController
 
 instance AutoRoute CoursesController
 
+
+instance AutoRoute CourseHoursController
+
+
+instance AutoRoute CoursesRelationsController
+

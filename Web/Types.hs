@@ -40,3 +40,24 @@ data CoursesController
     | UpdateCourseAction { courseId :: !(Id Course) }
     | DeleteCourseAction { courseId :: !(Id Course) }
     deriving (Eq, Show, Data)
+
+data CourseHoursController
+    = CourseHoursAction
+    | NewCourseHourAction { courseId :: !(Id Course) }
+    | ShowCourseHourAction { courseHourId :: !(Id CourseHour) }
+    | CreateCourseHourAction
+    | EditCourseHourAction { courseHourId :: !(Id CourseHour) }
+    | UpdateCourseHourAction { courseHourId :: !(Id CourseHour) }
+    | DeleteCourseHourAction { courseHourId :: !(Id CourseHour) }
+    deriving (Eq, Show, Data)
+
+data CoursesRelationsController
+    = CoursesRelationsAction
+    | NewCoursesRelationAction
+    | ShowCoursesRelationAction { coursesRelationId :: !(Id CoursesRelation) }
+    | CreateCoursesRelationAction
+    | EditCoursesRelationAction { coursesRelationId :: !(Id CoursesRelation) }
+    | UpdateCoursesRelationAction { coursesRelationId :: !(Id CoursesRelation) }
+    | DeleteCoursesRelationAction { courseId :: !(Id Course), userId :: !(Id User) }
+    | AddUserToCourseAction { courseId :: !(Id Course), userId :: !(Id User) }
+    deriving (Eq, Show, Data)

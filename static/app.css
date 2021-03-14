@@ -9,10 +9,47 @@ th {
     font-size: large;
 }
 
-td {
+.course {
     border: solid 1px #000;
     border-radius: 10px;
     width: 250px;
     height: 75px;
     padding-left: 20px;
+
+    top: 5em;
+    animation-name: fadeOutShadow;
+    animation-duration: 0.8s;
+    box-shadow: none;
+
+    background-color: #EEE;
 }
+
+
+.course:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    animation-name: fadeInShadow;
+    animation-duration: 0.3s;
+}
+
+@keyframes fadeInShadow {
+  from {
+    box-shadow: none;
+  }
+  to {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  }
+}
+
+@keyframes fadeOutShadow {
+  from {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  }
+  to {
+    box-shadow: none;
+  }
+}
+
+.search-d-none.search {
+    display: none;
+}
+
